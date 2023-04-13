@@ -1,5 +1,5 @@
 # Streamlink CLI
-`Streamlink CLI` is a lightweight command-line utility that lets you watch and record live streams, VODs, and videos from Twitch and YouTube in a terminal.  
+**Streamlink CLI** is a lightweight command-line utility that lets you watch and record live streams, VODs, and videos from Twitch and YouTube in a terminal.  
 
 ## Install
 
@@ -7,6 +7,8 @@
 ``` bash
 git clone https://github.com/lastofthedinosaurs/streamlink-cli.git
 cd streamlink-cli
+git checkout -b dev
+git pull origin dev
 ```
 
 ## Run
