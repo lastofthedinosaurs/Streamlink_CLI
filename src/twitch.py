@@ -25,28 +25,28 @@ def get_access_token():
         return r.json()
 
 
-def api_request(k, u, q=''):
+def api_request(keys, url, query=''):
     """
     Send a GET request to the Twitch API
     """
     with requests.Session() as s:
         headers = {
             "Client-ID": CLIENT_ID,
-            "Authorization": f"Bearer {k['access_token']}"
+            "Authorization": f"Bearer {keys['access_token']}"
         }
-        r = s.get(f"{u}?{q}", headers=headers)
+        r = s.get(f"{url}?{query}", headers=headers)
         r.raise_for_status()
         return r.json()
 
 
-def print_now_playing(d):
+def print_now_playing(data):
     """
     Print information about the requested stream
     """
-    if len(d['data']) == 1:
-        title = d['data'][0]['title']
-        game = d['data'][0]['game_name']
-        # started_at = d['data'][0]['started_at']
+    if len(data['data']) == 1:
+        title = data['data'][0]['title']
+        game = data['data'][0]['game_name']
+        # started_at = data['data'][0]['started_at']
         print(f"{STREAMER} - [{game}] : {title}")
     else:
         print(f"{STREAMER} is not live")
