@@ -3,7 +3,6 @@ name: Dependency Review
   push:
     branches:
       - main
-      - dev
 permissions:
   contents: read
 jobs:
