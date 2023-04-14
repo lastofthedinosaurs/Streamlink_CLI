@@ -16,7 +16,7 @@ stream = session.streams("https://www.twitch.tv/<REDACTED>")
 
 
 def player_log(loglevel, component, message):
-    """ Streamlink logger """
+    """ mpv logger """
     print(f"[{loglevel}] {component}: {message}")
 
 

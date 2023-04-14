@@ -46,7 +46,7 @@ def print_now_playing(array):
     if len(array["data"]) == 1:
         game = array["data"][0]["game_name"]
         title = array["data"][0]["title"]
-        # started_at = array["array"][0]["started_at"]
+        # started_at = array["data"][0]["started_at"]
         print(f"{STREAMER} - [{game}] : {title}")
     else:
         print(f"{STREAMER} is not live")
