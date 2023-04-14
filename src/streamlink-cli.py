@@ -41,8 +41,7 @@ def skip_silence():
 
     try:
         player.time_pos = player.wait_for_event("log_message", cond=check)
-    except TypeError as e:
-        print(e)
+    except TypeError:
         pass
 
     player.speed = 1
