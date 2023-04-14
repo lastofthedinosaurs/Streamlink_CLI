@@ -1,40 +1,20 @@
-# Dependency Review Action
-#
-# This Action will scan dependency manifest files that change as part of a Pull Request, surfacing known-vulnerable versions of the packages declared or updated in the PR. Once installed, if the workflow run is marked as required, PRs introducing known-vulnerable packages will be blocked from merging.
-#
-# Source repository: https://github.com/actions/dependency-review-action
-# Public documentation: https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-dependency-review#dependency-review-enforcement
-name: 'Dependency Review'
-on:
+name: Dependency Review
+'on':
   push:
     branches:
-    - main
-
+      - main
+      - dev
 permissions:
   contents: read
-
 jobs:
   dependency-review:
-  runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
-    - name: 'Checkout Repository'
-      uses: actions/checkout@v3
-    - name: Dependency Review
-      uses: actions/dependency-review-action@v3
-      with:
-      # Possible values: "critical", "high", "moderate", "low" 
-      fail-on-severity: moderate
-
-
-        # You can only include one of these two options: `allow-licenses` and `deny-licenses`
-        # ([String]). Only allow these licenses (optional)
-        # Possible values: Any `spdx_id` value(s) from https://docs.github.com/en/rest/licenses
-        allow-licenses: AGPL-3.0
-
-        # ([String]). Skip these GitHub Advisory Database IDs during detection (optional)
-        # Possible values: Any valid GitHub Advisory Database ID from https://github.com/advisories
-        # allow-ghsas: GHSA-abcd-1234-5679, GHSA-efgh-1234-5679
-
-        # ([String]). Block pull requests that introduce vulnerabilities in the scopes that match this list (optional)
-        # Possible values: "development", "runtime", "unknown"
-        fail-on-scopes: development, runtime, unknown
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v3
+        with:
+          fail-on-severity: moderate
+          allow-licenses: AGPL-3.0
+          fail-on-scopes: 'development, runtime, unknown'
