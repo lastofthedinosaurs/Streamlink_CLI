@@ -55,6 +55,7 @@ def skip_silence():
 
     player.speed = 1
     player.af = ""
+    return None
 
 
 @player.python_stream("streamlink-cli")
