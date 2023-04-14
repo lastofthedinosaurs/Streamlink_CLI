@@ -61,9 +61,9 @@ def skip_silence():
 @player.python_stream("streamlink-cli")
 def reader(quality="best"):
     """ Open stream URL as a file """
-    with stream[quality].open() as f:
+    with stream[quality].open() as file:
         while True:
-            yield f.read(1024*1024)
+            yield file.read(1024*1024)
 
 
 # Property access, these can be changed at runtime
