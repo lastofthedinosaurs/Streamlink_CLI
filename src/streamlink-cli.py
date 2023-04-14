@@ -27,11 +27,11 @@ p["stop-screensaver"] = "yes"
 # Specify a priority list of audio/video output drivers to be used.
 # If the list has a trailing ',', mpv will fall back on drivers not contained in the list.
 p['vo'] = 'gpu,'
-p['ao'] = 'pulse,'
+p['ao'] = 'alsa,'
 
 
 def skip_silence():
-    p.set_loglevel('debug')
+    p.set_loglevel('warn')
     p.af = 'lavfi=[silencedetect=n=-20dB:d=1]'
     p.speed = 100
 
@@ -64,25 +64,23 @@ def time_observer(_name, value):
     # fractional seconds since the beginning of the file.
     try:
         print('Now playing at {:.2f}s'.format(value))
-    except TypeError as e:
-        print(e)
+    except TypeError:
         pass
 
 
 @p.on_key_press('q')
-def my_q_binding():
+def q_binding():
     print('THERE IS NO ESCAPE')
 
 
 @p.on_key_press('s')
-def my_s_binding():
+def s_binding():
     pillow_img = p.screenshot_raw()
     pillow_img.save('screenshot.png')
 
 
 if __name__ == '__main__':
     p.play("python://streamlink-cli")
-    skip_silence()
     p.wait_for_playback()
 
     del p
