@@ -1,5 +1,5 @@
 
-[![Pylint](https://github.com/lastofthedinosaurs/Streamlink_CLI/actions/workflows/pylint.yml/badge.svg)](https://github.com/lastofthedinosaurs/Streamlink_CLI/actions/workflows/pylint.yml) 
+[![Pylint](https://github.com/lastofthedinosaurs/Streamlink_CLI/actions/workflows/pylint.yml/badge.svg)](https://github.com/lastofthedinosaurs/Streamlink_CLI/actions/workflows/pylint.yml) [![Scorecard supply-chain security](https://github.com/lastofthedinosaurs/Streamlink_CLI/actions/workflows/scorecard.yml/badge.svg)](https://github.com/lastofthedinosaurs/Streamlink_CLI/actions/workflows/scorecard.yml)
 
 # Streamlink CLI
 **Streamlink CLI** is a lightweight command-line utility that lets you watch and record live streams, VODs, and videos from Twitch and YouTube in a terminal.  
