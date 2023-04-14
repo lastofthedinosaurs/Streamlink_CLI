@@ -10,29 +10,29 @@ session.set_option("player", "mpv")
 stream = session.streams("https://www.twitch.tv/<REDACTED>")
 
 
-def my_log(loglevel, component, message):
+def player_log(loglevel, component, message):
     print('[{}] {}: {}'.format(loglevel, component, message))
 
 
-p = mpv.MPV(log_handler=my_log, ytdl=False, input_default_bindings=True, input_vo_keyboard=True)
-p.fullscreen = False
-p.loop_playlist = 'inf'
-p.sid = "auto"
-p.hwaccel = "auto"
+player = mpv.MPV(log_handler=player_log, ytdl=False, input_default_bindings=True, input_vo_keyboard=True)
+player.fullscreen = False
+player.loop_playlist = 'inf'
+player.sid = "auto"
+player.hwaccel = "auto"
 
 # Option access, in general these require the core to reinitialize
-p["stop-screensaver"] = "yes"
+player["stop-screensaver"] = "yes"
 
 # Specify a priority list of audio/video output drivers to be used.
 # If the list has a trailing ',', mpv will fall back on drivers not contained in the list.
-p['vo'] = 'gpu,'
-p['ao'] = 'alsa,'
+player['vo'] = 'gpu,'
+player['ao'] = 'alsa,'
 
 
 def skip_silence():
-    p.set_loglevel('warn')
-    p.af = 'lavfi=[silencedetect=n=-20dB:d=1]'
-    p.speed = 100
+    player.set_loglevel('warn')
+    player.af = 'lavfi=[silencedetect=n=-20dB:d=1]'
+    player.speed = 100
 
     def check(evt):
         toks = evt['event']['text'].split()
@@ -40,16 +40,16 @@ def skip_silence():
             return float(toks[2])
 
     try:
-        p.time_pos = p.wait_for_event('log_message', cond=check)
+        player.time_pos = player.wait_for_event('log_message', cond=check)
     except TypeError as e:
         print(e)
         pass
 
-    p.speed = 1
-    p.af = ''
+    player.speed = 1
+    player.af = ''
 
 
-@p.python_stream("streamlink-cli")
+@player.python_stream("streamlink-cli")
 def reader(quality="best"):
     with stream[quality].open() as f:
         while True:
@@ -57,7 +57,7 @@ def reader(quality="best"):
 
 
 # Property access, these can be changed at runtime
-@p.property_observer('time-pos')
+@player.property_observer('time-pos')
 def time_observer(_name, value):
     # Here, _value is either None if nothing is playing or a float containing
     # fractional seconds since the beginning of the file.
@@ -67,19 +67,19 @@ def time_observer(_name, value):
         pass
 
 
-@p.on_key_press('q')
+@player.on_key_press('q')
 def q_binding():
     print('THERE IS NO ESCAPE')
 
 
-@p.on_key_press('s')
+@player.on_key_press('s')
 def s_binding():
-    pillow_img = p.screenshot_raw()
-    pillow_img.save('screenshot.png')
+    img = player.screenshot_raw()
+    img.save('screenshot.png')
 
 
 if __name__ == '__main__':
-    p.play("python://streamlink-cli")
-    p.wait_for_playback()
+    player.play("python://streamlink-cli")
+    player.wait_for_playback()
 
-    del p
+    del player

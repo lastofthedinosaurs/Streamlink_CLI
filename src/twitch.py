@@ -30,11 +30,11 @@ def get_stream_data(k):
         return r.json()
 
 
-def print_now_playing(stream_data):
-    if len(stream_data['data']) == 1:
-        title = stream_data['data'][0]['title']
-        game = stream_data['data'][0]['game_name']
-        started_at = stream_data['data'][0]['started_at']
+def print_now_playing(d):
+    if len(d['data']) == 1:
+        title = d['data'][0]['title']
+        game = d['data'][0]['game_name']
+        started_at = d['data'][0]['started_at']
         print(f"{streamer} - [{game}] : {title}")
     else:
         print(f"{streamer} is not live")
