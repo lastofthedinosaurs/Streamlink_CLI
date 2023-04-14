@@ -2,7 +2,7 @@
 """
 Receives input data from various APIs (Twitch, YouTube, etc.) before
 piping it to mpv for video playback. Other streaming/video platforms
-can easily be added through the use of Streamlink Plugins.
+may be added through the use of Streamlink Plugins.
 """
 
 import mpv
@@ -61,9 +61,9 @@ def skip_silence():
 @player.python_stream("streamlink-cli")
 def reader(quality="best"):
     """ Open stream URL as a file """
-    with stream[quality].open() as f:
+    with stream[quality].open() as file:
         while True:
-            yield f.read(1024*1024)
+            yield file.read(1024*1024)
 
 
 # Property access, these can be changed at runtime
@@ -81,15 +81,15 @@ def time_observer(_name, value):
 
 @player.on_key_press("q")
 def q_binding():
-    """ MPV keyboard binding """
+    """ mpv keyboard binding """
     print("THERE IS NO ESCAPE")
 
 
 @player.on_key_press("s")
 def s_binding():
-    """ MPV keyboard binding """
-    i = player.screenshot_raw()
-    i.save("screenshot.png")
+    """ mpv keyboard binding """
+    img = player.screenshot_raw()
+    img.save("screenshot.png")
 
 
 if __name__ == "__main__":
