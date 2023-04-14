@@ -5,17 +5,33 @@
 # Source repository: https://github.com/actions/dependency-review-action
 # Public documentation: https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-dependency-review#dependency-review-enforcement
 name: 'Dependency Review'
-on: push
+on: [pull_request]
 
 permissions:
   contents: read
 
 jobs:
   dependency-review:
-    if: ${{ github.ref == 'refs/heads/main' }}
-    runs-on: ubuntu-latest
+  runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout Repository'
-        uses: actions/checkout@v3
-      - name: 'Dependency Review'
-        uses: actions/dependency-review-action@v2
+    - name: 'Checkout Repository'
+      uses: actions/checkout@v3
+    - name: Dependency Review
+      uses: actions/dependency-review-action@v3
+      with:
+      # Possible values: "critical", "high", "moderate", "low" 
+      fail-on-severity: moderate
+
+
+        # You can only include one of these two options: `allow-licenses` and `deny-licenses`
+        # ([String]). Only allow these licenses (optional)
+        # Possible values: Any `spdx_id` value(s) from https://docs.github.com/en/rest/licenses
+        allow-licenses: AGPL-3.0
+
+        # ([String]). Skip these GitHub Advisory Database IDs during detection (optional)
+        # Possible values: Any valid GitHub Advisory Database ID from https://github.com/advisories
+        # allow-ghsas: GHSA-abcd-1234-5679, GHSA-efgh-1234-5679
+
+        # ([String]). Block pull requests that introduce vulnerabilities in the scopes that match this list (optional)
+        # Possible values: "development", "runtime", "unknown"
+        fail-on-scopes: development, runtime, unknown
