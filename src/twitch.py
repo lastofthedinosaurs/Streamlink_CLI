@@ -7,7 +7,7 @@ import requests
 
 CLIENT_SECRET = "<REDACTED>"
 CLIENT_ID = "<REDACTED>"
-STREAMER ="<REDACTED>"
+STREAMER = "<REDACTED>"
 
 
 def get_access_token():
@@ -39,14 +39,14 @@ def api_request(keys, url, query=''):
         return response.json()
 
 
-def print_now_playing(data):
+def print_now_playing(array):
     """
     Print information about the requested stream
     """
-    if len(data["data"]) == 1:
-        title = data["data"][0]["title"]
-        game = data["data"][0]["game_name"]
-        # started_at = data["data"][0]["started_at"]
+    if len(array["data"]) == 1:
+        game = array["data"][0]["game_name"]
+        title = array["data"][0]["title"]
+        # started_at = array["array"][0]["started_at"]
         print(f"{STREAMER} - [{game}] : {title}")
     else:
         print(f"{STREAMER} is not live")

@@ -67,9 +67,9 @@ curl -X GET 'https://api.twitch.tv/helix/streams' \
 ### Example Request
 
 ``` bash
-curl -X GET 'https://api.twitch.tv/helix/streams' \
+curl -X GET 'https://api.twitch.tv/helix/streams?user_login=afro&user_login=cohhcarnage&user_login=lana_lux' \
     -H 'Authorization: Bearer 2gbdx6oar67tqtcmt49t3wpcgycthx' \
-    -H 'Client-Id: wbmytr93xzw8zbg0p1izqyzzc5mbiz'
+    -H 'Client-Id: uo6dggojyb8d6soh92zknwmi5ej1q2'
 
 ```
 
