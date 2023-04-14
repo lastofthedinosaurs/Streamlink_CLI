@@ -34,7 +34,7 @@ def print_now_playing(d):
     if len(d['data']) == 1:
         title = d['data'][0]['title']
         game = d['data'][0]['game_name']
-        started_at = d['data'][0]['started_at']
+        # started_at = d['data'][0]['started_at']
         print(f"{STREAMER} - [{game}] : {title}")
     else:
         print(f"{STREAMER} is not live")
