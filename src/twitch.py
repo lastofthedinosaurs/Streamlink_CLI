@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import requests
 
 client_secret = "<REDACTED>"
@@ -33,12 +35,13 @@ def print_now_playing(stream_data):
         title = stream_data['data'][0]['title']
         game = stream_data['data'][0]['game_name']
         started_at = stream_data['data'][0]['started_at']
-        print(f"{streamer} - [{game}] : {title} ")
+        print(f"{streamer} - [{game}] : {title}")
     else:
         print(f"{streamer} is not live")
 
 
-keys = get_access_token()
-data = get_stream_data(keys)
+if __name__ == '__main__':
+    keys = get_access_token()
+    data = get_stream_data(keys)
 
-print_now_playing(data)
+    print_now_playing(data)

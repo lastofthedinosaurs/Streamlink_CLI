@@ -14,10 +14,9 @@ def my_log(loglevel, component, message):
     print('[{}] {}: {}'.format(loglevel, component, message))
 
 
-p = mpv.MPV(log_handler=my_log, ytdl=True, input_default_bindings=True, input_vo_keyboard=True)
-p.fullscreen = True
+p = mpv.MPV(log_handler=my_log, ytdl=False, input_default_bindings=True, input_vo_keyboard=True)
+p.fullscreen = False
 p.loop_playlist = 'inf'
-p.fullscreen = "no"
 p.sid = "auto"
 p.hwaccel = "auto"
 
