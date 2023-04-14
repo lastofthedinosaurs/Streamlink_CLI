@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
+"""
+Used to query the Twitch API for data to feed to Streamlink
+"""
 
 import requests
 
-client_secret = "<REDACTED>"
-client_id = "<REDACTED>"
-streamer = "<REDACTED>"
+CLIENT_SECRET = '<REDACTED>'
+CLIENT_ID = '<REDACTED>'
+STREAMER = '<REDACTED>'
 
 
 def get_access_token():
+    """
+    Twitch APIs require OAuth 2.0 access tokens to access resources.
+    """
     with requests.Session() as s:
         body = {
-            "client_id": client_id,
-            "client_secret": client_secret,
+            "client_id": CLIENT_ID,
+            "client_secret": CLIENT_SECRET,
             "grant_type": "client_credentials"
         }
         r = s.post('https://id.twitch.tv/oauth2/token', body)
@@ -19,29 +25,39 @@ def get_access_token():
         return r.json()
 
 
-def get_stream_data(k):
+def api_request(k, u, q=''):
+    """
+    Send a GET request to the Twitch API
+    """
     with requests.Session() as s:
         headers = {
-            "Client-ID": client_id,
+            "Client-ID": CLIENT_ID,
             "Authorization": f"Bearer {k['access_token']}"
         }
-        r = s.get(f'https://api.twitch.tv/helix/streams?user_login={streamer}', headers=headers)
+        r = s.get(f"{u}?{q}", headers=headers)
         r.raise_for_status()
         return r.json()
 
 
-def print_now_playing(stream_data):
-    if len(stream_data['data']) == 1:
-        title = stream_data['data'][0]['title']
-        game = stream_data['data'][0]['game_name']
-        started_at = stream_data['data'][0]['started_at']
-        print(f"{streamer} - [{game}] : {title}")
+def print_now_playing(d):
+    """
+    Print information about the requested stream
+    """
+    if len(d['data']) == 1:
+        title = d['data'][0]['title']
+        game = d['data'][0]['game_name']
+        # started_at = d['data'][0]['started_at']
+        print(f"{STREAMER} - [{game}] : {title}")
     else:
-        print(f"{streamer} is not live")
+        print(f"{STREAMER} is not live")
 
 
 if __name__ == '__main__':
-    keys = get_access_token()
-    data = get_stream_data(keys)
+    KEYS = get_access_token()
 
-    print_now_playing(data)
+    URL = "https://api.twitch.tv/helix/streams"
+    QUERY = f"user_login={STREAMER}"
+
+    DATA = api_request(KEYS, URL, QUERY)
+
+    print_now_playing(DATA)
