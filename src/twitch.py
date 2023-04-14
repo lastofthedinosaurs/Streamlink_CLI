@@ -53,11 +53,11 @@ def print_now_playing(d):
 
 
 if __name__ == '__main__':
-    keys = get_access_token()
+    KEYS = get_access_token()
 
-    url = "https://api.twitch.tv/helix/streams"
-    query = f"user_login={STREAMER}"
+    URL = "https://api.twitch.tv/helix/streams"
+    QUERY = f"user_login={STREAMER}"
 
-    data = api_request(keys, url, query)
+    DATA = api_request(KEYS, URL, QUERY)
 
-    print_now_playing(data)
+    print_now_playing(DATA)

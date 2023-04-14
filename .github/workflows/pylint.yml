@@ -21,4 +21,4 @@ jobs:
         pip install --requirement requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint --good-names e,f,s,r,d,k,i $(git ls-files '*.py')
+        pylint --good-names e,f,s,r,d,k,i,u,q $(git ls-files '*.py')
