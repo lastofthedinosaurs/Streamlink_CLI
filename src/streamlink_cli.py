@@ -47,6 +47,8 @@ def skip_silence():
         toks = evt["event"]["text"].split()
         if "silence_end:" in toks:
             return float(toks[2])
+        else:
+            return None
 
     try:
         player.time_pos = player.wait_for_event("log_message", cond=check)
@@ -55,7 +57,6 @@ def skip_silence():
 
     player.speed = 1
     player.af = ""
-    return None
 
 
 @player.python_stream("streamlink-cli")
