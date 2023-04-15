@@ -5,14 +5,29 @@ piping it to mpv for video playback. Other streaming/video platforms
 may be added through the use of Streamlink Plugins.
 """
 
+import os
+
 import mpv
+from dotenv import load_dotenv
 from streamlink import Streamlink
 
+from twitch import get_access_token
+
+load_dotenv()
+
+
+class Config:
+    STREAMER = os.getenv("STREAMER")
+
+
+CONFIG = Config()
+KEYS = get_access_token()
+
 session = Streamlink()
-session.set_option("twitch-api-header", "OAuth <REDACTED>")
+session.set_option("twitch-api-header", f"OAuth {KEYS['access_token']}")
 session.set_option("stream-timeout", 30)
 session.set_option("player", "mpv")
-stream = session.streams("https://www.twitch.tv/<REDACTED>")
+stream = session.streams(f"https://www.twitch.tv/{CONFIG.STREAMER}")
 
 
 def player_log(loglevel, component, message):

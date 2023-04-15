@@ -3,11 +3,22 @@
 Used to query the Twitch API for data to feed to Streamlink
 """
 
-import requests
+import os
 
-CLIENT_SECRET = "<REDACTED>"
-CLIENT_ID = "<REDACTED>"
-STREAMER = "<REDACTED>"
+import requests
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+class Config:
+    OAUTH_URL = os.getenv("OAUTH_URL")
+    CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+    CLIENT_ID = os.getenv("CLIENT_ID")
+    STREAMER = os.getenv("STREAMER")
+
+
+CONFIG = Config()
 
 
 def get_access_token():
@@ -16,11 +27,11 @@ def get_access_token():
     """
     with requests.Session() as session:
         body = {
-            "client_id": CLIENT_ID,
-            "client_secret": CLIENT_SECRET,
+            "client_id": CONFIG.CLIENT_ID,
+            "client_secret": CONFIG.CLIENT_SECRET,
             "grant_type": "client_credentials"
         }
-        response = session.post("https://id.twitch.tv/oauth2/token", body)
+        response = session.post(CONFIG.OAUTH_URL, body)
         response.raise_for_status()
         return response.json()
 
@@ -31,7 +42,7 @@ def api_request(keys, url, query=''):
     """
     with requests.Session() as session:
         headers = {
-            "Client-ID": CLIENT_ID,
+            "Client-ID": CONFIG.CLIENT_ID,
             "Authorization": f"Bearer {keys['access_token']}"
         }
         response = session.get(f"{url}?{query}", headers=headers)
@@ -47,16 +58,16 @@ def print_now_playing(array):
         game = array["data"][0]["game_name"]
         title = array["data"][0]["title"]
         # started_at = array["data"][0]["started_at"]
-        print(f"{STREAMER} - [{game}] : {title}")
+        print(f"{CONFIG.STREAMER} - [{game}] : {title}")
     else:
-        print(f"{STREAMER} is not live")
+        print(f"{CONFIG.STREAMER} is not live")
 
 
 if __name__ == "__main__":
     KEYS = get_access_token()
 
     URL = "https://api.twitch.tv/helix/streams"
-    QUERY = f"user_login={STREAMER}"
+    QUERY = f"user_login={CONFIG.STREAMER}"
 
     DATA = api_request(KEYS, URL, QUERY)
 
