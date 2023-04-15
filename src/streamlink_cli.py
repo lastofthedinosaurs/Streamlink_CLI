@@ -54,7 +54,7 @@ def skip_silence():
     """
     Used to automatically skip muted segments in Twitch VODs
     """
-    player.set_loglevel("warn")
+    player.set_loglevel("error")
     player.af = "lavfi=[silencedetect=n=-20dB:d=1]"
     player.speed = 100
 
