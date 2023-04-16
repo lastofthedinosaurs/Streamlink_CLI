@@ -8,8 +8,6 @@ import os
 import requests
 from dotenv import load_dotenv
 
-load_dotenv()
-
 
 class Config:
     OAUTH_URL = os.getenv("OAUTH_URL")
@@ -18,7 +16,54 @@ class Config:
     STREAMER = os.getenv("STREAMER")
 
 
-CONFIG = Config()
+class APIhelper:
+    id = ""
+    login = ""
+    user_id = ""
+    user_login = ""
+    game_id = ""
+    type = "live"
+    lang = "en"
+    first = 10
+
+    def get_streams(self, keys, query=""):
+        """
+        Gets a list of all streams.
+
+        The list is in descending order by the number of viewers
+        watching the stream. Because viewers come and go during a
+        stream, it’s possible to find duplicate or missing streams
+        in the list as you page through the results.
+        """
+        url = "https://api.twitch.tv/helix/streams"
+        if not query:
+            if self.user_id:
+                query = f"user_id={self.user_id}"
+            elif self.user_login:
+                query = f"user_login={self.user_login}"
+            elif self.game_id:
+                query = f"game_id={self.game_id}"
+        return api_request(
+            keys,
+            url,
+            f"{query}&language={self.lang}".strip()
+        )
+
+    def get_users(self, keys, query=""):
+        """
+        Gets information about one or more users.
+
+        If you don’t specify IDs or login names, the request returns
+        information about the user in the access token if you specify
+        a user access token.
+        """
+        url = "https://api.twitch.tv/helix/users"
+        if not query:
+            if self.id:
+                query = f"id={self.id}"
+            elif self.login:
+                query = f"login={self.login}"
+        return api_request(keys, url, query)
 
 
 def get_access_token():
@@ -51,51 +96,6 @@ def api_request(keys, url, query=""):
         return response.json()
 
 
-class APIhelper:
-    twitch_id = ""
-    login = ""
-    user_id = ""
-    user_login = ""
-    game_id = ""
-    stream_type = "live"
-    language = "en"
-    first = 10
-
-    def get_streams(self, keys, query=""):
-        """
-        Gets a list of all streams.
-
-        The list is in descending order by the number of viewers
-        watching the stream. Because viewers come and go during a
-        stream, it’s possible to find duplicate or missing streams
-        in the list as you page through the results.
-        """
-        url = "https://api.twitch.tv/helix/streams"
-        if self.user_id:
-            query = f"user_id={self.user_id}"
-        elif self.user_login:
-            query = f"user_login={self.user_login}"
-        elif self.game_id:
-            query = f"game_id={self.game_id}"
-        return api_request(keys, url, f"{query}&language={self.language}")
-
-    def get_users(self, keys, query=""):
-        """
-        Gets information about one or more users.
-
-        If you don’t specify IDs or login names, the request returns
-        information about the user in the access token if you specify
-        a user access token.
-        """
-        url = "https://api.twitch.tv/helix/users"
-        if not query:
-            if self.twitch_id:
-                query = f"id={self.twitch_id}"
-            elif self.login:
-                query = f"login={self.login}"
-        return api_request(keys, url, query)
-
-
 def print_now_playing(array):
     """
     Print information about the requested stream
@@ -110,10 +110,12 @@ def print_now_playing(array):
 
 
 if __name__ == "__main__":
+    load_dotenv()
+    CONFIG = Config()
+
     KEYS = get_access_token()
 
     API_HELPER = APIhelper()
     API_HELPER.user_login = CONFIG.STREAMER
-    DATA = API_HELPER.get_streams(KEYS)
 
-    print_now_playing(DATA)
+    print_now_playing(API_HELPER.get_streams(KEYS))
