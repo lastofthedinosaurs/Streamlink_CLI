@@ -59,8 +59,8 @@ APIs that accept `app access tokens`.
 The first step to getting an access token is registering your application with Twitch (including
 forks/clones of **Streamlink_CLI**). [Read more](https://dev.twitch.tv/docs/authentication/register-app/)
 
-**Streamlink_CLI**  uses the Implicit grant flow for now but will switch to the Authorization code
-grant flow after development. 
+**Streamlink_CLI**  uses the `Implicit grant flow` for now but will switch to the `Authorization code
+grant flow` after development. 
 
 | Flow                                                                                                                            | Token Type        | Description                                                                                                                            |
 |---------------------------------------------------------------------------------------------------------------------------------|-------------------|----------------------------------------------------------------------------------------------------------------------------------------|

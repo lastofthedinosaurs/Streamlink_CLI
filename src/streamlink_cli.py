@@ -16,47 +16,30 @@ from twitch import get_access_token
 load_dotenv()
 
 
-class Config:
-    STREAMER = os.getenv("STREAMER")
-
-
-CONFIG = Config()
-KEYS = get_access_token()
-
-session = Streamlink()
-session.set_option("twitch-api-header", f"OAuth {KEYS['access_token']}")
-session.set_option("stream-timeout", 30)
-session.set_option("player", "mpv")
-stream = session.streams(f"https://www.twitch.tv/{CONFIG.STREAMER}")
-
-
 def player_log(loglevel, component, message):
     """ mpv logger """
     print(f"[{loglevel}] {component}: {message}")
 
 
-player = mpv.MPV(
-    log_handler=player_log,
-    ytdl=False,
-    input_default_bindings=True,
-    input_vo_keyboard=True
-)
-player.fullscreen = False
-player.loop_playlist = "inf"
-player.sid = "auto"
-player.hwaccel = "auto"
-player["stop-screensaver"] = "yes"
-player["vo"] = "gpu,"
-player["ao"] = "alsa,"
+PLAYER = mpv.MPV(
+        log_handler=player_log,
+        ytdl=False,
+        input_default_bindings=True,
+        input_vo_keyboard=True
+    )
+
+
+class Config:
+    STREAMER = os.getenv("STREAMER")
 
 
 def skip_silence():
     """
     Used to automatically skip muted segments in Twitch VODs
     """
-    player.set_loglevel("error")
-    player.af = "lavfi=[silencedetect=n=-20dB:d=1]"
-    player.speed = 100
+    PLAYER.set_loglevel("error")
+    PLAYER.af = "lavfi=[silencedetect=n=-20dB:d=1]"
+    PLAYER.speed = 100
 
     def check(evt):
         toks = evt["event"]["text"].split()
@@ -65,24 +48,24 @@ def skip_silence():
         return None
 
     try:
-        player.time_pos = player.wait_for_event("log_message", cond=check)
+        PLAYER.time_pos = PLAYER.wait_for_event("log_message", cond=check)
     except TypeError:
         pass
 
-    player.speed = 1
-    player.af = ""
+    PLAYER.speed = 1
+    PLAYER.af = ""
 
 
-@player.python_stream("streamlink-cli")
+@PLAYER.python_stream("streamlink-cli")
 def reader(quality="best"):
     """ Open stream URL as a file """
-    with stream[quality].open() as file:
+    with STREAM[quality].open() as file:
         while True:
             yield file.read(1024*1024)
 
 
 # Property access, these can be changed at runtime
-@player.property_observer("time-pos")
+@PLAYER.property_observer("time-pos")
 def time_observer(_name, value):
     """
     Here, value is either None if nothing is playing or a float containing
@@ -94,22 +77,38 @@ def time_observer(_name, value):
         pass
 
 
-@player.on_key_press("q")
+@PLAYER.on_key_press("q")
 def q_binding():
     """ mpv keyboard binding """
     print("THERE IS NO ESCAPE")
 
 
-@player.on_key_press("s")
+@PLAYER.on_key_press("s")
 def s_binding():
     """ mpv keyboard binding """
-    img = player.screenshot_raw()
+    img = PLAYER.screenshot_raw()
     img.save("screenshot.png")
 
 
 if __name__ == "__main__":
-    player.play("python://streamlink-cli")
-    skip_silence()
-    player.wait_for_playback()
+    CONFIG = Config()
+    KEYS = get_access_token()
 
-    del player
+    SESSION = Streamlink()
+    SESSION.set_option("twitch-api-header", f"OAuth {KEYS['access_token']}")
+    SESSION.set_option("stream-timeout", 30)
+    SESSION.set_option("player", "mpv")
+    STREAM = SESSION.streams(f"https://www.twitch.tv/{CONFIG.STREAMER}")
+
+    PLAYER.fullscreen = False
+    PLAYER.loop_playlist = "inf"
+    PLAYER.sid = "auto"
+    PLAYER.hwaccel = "auto"
+    PLAYER["stop-screensaver"] = "yes"
+    PLAYER["vo"] = "gpu,"
+    PLAYER["ao"] = "alsa,"
+    PLAYER.play("python://streamlink-cli")
+    skip_silence()
+    PLAYER.wait_for_playback()
+
+    del PLAYER
