@@ -22,11 +22,11 @@ def player_log(loglevel, component, message):
 
 
 PLAYER = mpv.MPV(
-        log_handler=player_log,
-        ytdl=False,
-        input_default_bindings=True,
-        input_vo_keyboard=True
-    )
+    log_handler=player_log,
+    ytdl=False,
+    input_default_bindings=True,
+    input_vo_keyboard=True
+)
 
 
 class Config:
