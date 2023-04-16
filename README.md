@@ -99,12 +99,12 @@ want to use `gpu`, which is the default in `streamlink_cli.py`.
 If the list has a trailing ',', mpv will fall back on drivers not contained in the list:
 
 ``` Python
-player["vo"] = "gpu,"
-player["ao"] = "alsa,"
+PLAYER["vo"] = "gpu,"
+PLAYER["ao"] = "alsa,"
 ```
 
-So, for me, mpv will produce a couple of warnings while it tries the gpu, opengpl, gpu-next, and
-xv drivers before finally landing on x11. You should leave the `vo` and `ao` settings unless you 
+So, for me, mpv will produce a couple of warnings while it tries the gpu, opengpl, and xv 
+drivers before finally landing on x11. You should leave the `vo` and `ao` settings unless you 
 have a good reason to change them. Playback should still work, even with the errors/warnings.
 
 ``` bash

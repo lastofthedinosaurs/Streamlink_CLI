@@ -25,18 +25,19 @@ def get_access_token():
     """
     Twitch APIs require OAuth 2.0 access tokens to access resources.
     """
+    url = "https://id.twitch.tv/oauth2/token"
     with requests.Session() as session:
         body = {
             "client_id": CONFIG.CLIENT_ID,
             "client_secret": CONFIG.CLIENT_SECRET,
             "grant_type": "client_credentials"
         }
-        response = session.post(CONFIG.OAUTH_URL, body)
+        response = session.post(url, body)
         response.raise_for_status()
         return response.json()
 
 
-def api_request(keys, url, query=''):
+def api_request(keys, url, query=""):
     """
     Send a GET request to the Twitch API
     """
@@ -48,6 +49,51 @@ def api_request(keys, url, query=''):
         response = session.get(f"{url}?{query}", headers=headers)
         response.raise_for_status()
         return response.json()
+
+
+class APIhelper:
+    twitch_id = ""
+    login = ""
+    user_id = ""
+    user_login = ""
+    game_id = ""
+    stream_type = "live"
+    language = "en"
+    first = 10
+
+    def get_streams(self, keys, query=""):
+        """
+        Gets a list of all streams.
+
+        The list is in descending order by the number of viewers
+        watching the stream. Because viewers come and go during a
+        stream, it’s possible to find duplicate or missing streams
+        in the list as you page through the results.
+        """
+        url = "https://api.twitch.tv/helix/streams"
+        if self.user_id:
+            query = f"user_id={self.user_id}"
+        elif self.user_login:
+            query = f"user_login={self.user_login}"
+        elif self.game_id:
+            query = f"game_id={self.game_id}"
+        return api_request(keys, url, f"{query}&language={self.language}")
+
+    def get_users(self, keys, query=""):
+        """
+        Gets information about one or more users.
+
+        If you don’t specify IDs or login names, the request returns
+        information about the user in the access token if you specify
+        a user access token.
+        """
+        url = "https://api.twitch.tv/helix/users"
+        if not query:
+            if self.twitch_id:
+                query = f"id={self.twitch_id}"
+            elif self.login:
+                query = f"login={self.login}"
+        return api_request(keys, url, query)
 
 
 def print_now_playing(array):
@@ -66,9 +112,8 @@ def print_now_playing(array):
 if __name__ == "__main__":
     KEYS = get_access_token()
 
-    URL = "https://api.twitch.tv/helix/streams"
-    QUERY = f"user_login={CONFIG.STREAMER}"
-
-    DATA = api_request(KEYS, URL, QUERY)
+    API_HELPER = APIhelper()
+    API_HELPER.user_login = CONFIG.STREAMER
+    DATA = API_HELPER.get_streams(KEYS)
 
     print_now_playing(DATA)
