@@ -30,7 +30,7 @@ Requires an `app access token` or `user access token`.
 Gets information about the specified user.
 
 ``` bash
-curl -X GET 'https://api.twitch.tv/helix/users?id=141981764' \
+curl -X GET 'https://api.twitch.tv/helix/users?id=8675309' \
     -H 'Authorization: Bearer cfabdegwdoklmawdzdo98xt2fo512y' \
     -H 'Client-Id: uo6dggojyb8d6soh92zknwmi5ej1q2'
 
@@ -42,9 +42,9 @@ curl -X GET 'https://api.twitch.tv/helix/users?id=141981764' \
 {
   "data": [
     {
-      "id": "141981764",
-      "login": "twitchdev",
-      "display_name": "TwitchDev",
+      "id": "8675309",
+      "login": "lastofthedinosaurs",
+      "display_name": "LastoftheDinosaurs",
       "type": "",
       "broadcaster_type": "partner",
       "description": "Supporting third-party developers building Twitch integrations from chatbots to game integrations.",
