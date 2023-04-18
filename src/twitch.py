@@ -9,14 +9,15 @@ import requests
 from dotenv import load_dotenv
 
 
-class Config:
-    OAUTH_URL = os.getenv("OAUTH_URL")
-    CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-    CLIENT_ID = os.getenv("CLIENT_ID")
-    STREAMER = os.getenv("STREAMER")
-
-
 class APIhelper:
+    """
+    Used to build API queries.
+
+    You can pass each method a query or use the methods' built-in
+    settings to construct new queries. Some methods return results when
+    no query is provided. See docs/ or the official Twitch API
+    documentation for more details.
+    """
     id = ""
     name = ""
     login = ""
@@ -34,8 +35,10 @@ class APIhelper:
 
     def get_channel_stream_schedule(self, keys, query=""):
         """
-        Gets the broadcaster’s streaming schedule. You can get the entire
-        schedule or specific segments of the schedule.
+        Gets the broadcaster's streaming schedule.
+
+        You can get the entire schedule or specific segments of
+        the schedule.
         """
         url = "https://api.twitch.tv/helix/schedule"
         if not query:
@@ -61,9 +64,10 @@ class APIhelper:
 
     def get_followed_channels(self, keys, query=""):
         """
-        Gets a list of broadcasters that the specified user follows. 
-        You can also use this endpoint to see whether a user follows 
-        a specific broadcaster.
+        Gets a list of broadcasters that the specified user follows.
+
+        You can also use this endpoint to see whether a user
+        follows a specific broadcaster.
         """
         url = "https://api.twitch.tv/helix/followed"
         if not query:
@@ -77,10 +81,11 @@ class APIhelper:
         """
         Gets information about specified categories or games.
 
-        You may get up to 100 categories or games by specifying their ID 
-        or name. You may specify all IDs, all names, or a combination of 
-        IDs and names. If you specify a combination of IDs and names, the 
-        total number of IDs and names must not exceed 100.
+        You may get up to 100 categories or games by specifying their
+        ID or name. You may specify all IDs, all names, or a
+        combination of IDs and names. If you specify a combination of
+        IDs and names, the total number of IDs and names must not
+        exceed 100.
         """
         url = "https://api.twitch.tv/helix/games"
         if not query:
@@ -98,8 +103,8 @@ class APIhelper:
 
         The list is in descending order by the number of viewers
         watching the stream. Because viewers come and go during a
-        stream, it’s possible to find duplicate or missing streams
-        in the list as you page through the results.
+        stream, finding duplicate or missing streams in the list as
+        you page through the results is possible.
         """
         url = "https://api.twitch.tv/helix/streams"
         if not query:
@@ -129,7 +134,7 @@ class APIhelper:
         """
         Gets information about one or more users.
 
-        If you don’t specify IDs or login names, the request returns
+        If you don't specify IDs or login names, the request returns
         information about the user in the access token if you specify
         a user access token.
         """
@@ -143,12 +148,14 @@ class APIhelper:
 
     def get_videos(self, keys, query=""):
         """
-        Gets information about one or more published videos. You may 
-        get videos by ID, by user, or by game/category.
+        Gets information about one or more published videos.
+
+        You may get videos by ID, by user, or by game/category.
 
         You may apply several filters to get a subset of the videos.
         The filters are applied as an AND operation to each video.
-        For example, if language is set to ‘de’ and game_id is set to
+
+        For example, if language is set to 'de' and game_id is set to
         21779, the response includes only videos that show playing
         League of Legends by users that stream in German. The filters
         apply only if you get videos by user ID or game ID.
@@ -170,15 +177,15 @@ class APIhelper:
         return api_request(keys, url, f"{query}")
 
 
-def get_access_token():
+def get_access_token(client_id, client_secret):
     """
     Twitch APIs require OAuth 2.0 access tokens to access resources.
     """
     url = "https://id.twitch.tv/oauth2/token"
     with requests.Session() as session:
         body = {
-            "client_id": CONFIG.CLIENT_ID,
-            "client_secret": CONFIG.CLIENT_SECRET,
+            "client_id": client_id,
+            "client_secret": client_secret,
             "grant_type": "client_credentials"
         }
         response = session.post(url, body)
@@ -192,7 +199,7 @@ def api_request(keys, url, query=""):
     """
     with requests.Session() as session:
         headers = {
-            "Client-ID": CONFIG.CLIENT_ID,
+            "Client-ID": CONFIG.get('CLIENT_ID'),
             "Authorization": f"Bearer {keys['access_token']}"
         }
         response = session.get(f"{url}?{query}".strip(), headers=headers)
@@ -208,18 +215,25 @@ def print_now_playing(array):
         game = array["data"][0]["game_name"]
         title = array["data"][0]["title"]
         # started_at = array["data"][0]["started_at"]
-        print(f"{CONFIG.STREAMER} - [{game}] : {title}")
+        print(f"{CONFIG.get('STREAMER')} - [{game}] : {title}")
     else:
-        print(f"{CONFIG.STREAMER} is not live")
+        print(f"{CONFIG.get('STREAMER')} is not live")
 
 
 if __name__ == "__main__":
     load_dotenv()
-    CONFIG = Config()
+    CONFIG = {
+        "CLIENT_SECRET": f"{os.getenv('CLIENT_SECRET')}",
+        "CLIENT_ID": f"{os.getenv('CLIENT_ID')}",
+        "STREAMER": f"{os.getenv('STREAMER')}"
+    }
 
-    KEYS = get_access_token()
+    KEYS = get_access_token(
+        CONFIG.get('CLIENT_ID'),
+        CONFIG.get('CLIENT_SECRET')
+    )
 
     API_HELPER = APIhelper()
-    API_HELPER.user_login = CONFIG.STREAMER
+    API_HELPER.user_login = CONFIG.get('STREAMER')
 
     print_now_playing(API_HELPER.get_streams(KEYS))

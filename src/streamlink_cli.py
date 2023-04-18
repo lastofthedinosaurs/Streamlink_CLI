@@ -29,10 +29,6 @@ PLAYER = mpv.MPV(
 )
 
 
-class Config:
-    STREAMER = os.getenv("STREAMER")
-
-
 def skip_silence():
     """
     Used to automatically skip muted segments in Twitch VODs
@@ -59,9 +55,13 @@ def skip_silence():
 @PLAYER.python_stream("streamlink-cli")
 def reader(quality="best"):
     """ Open stream URL as a file """
-    with STREAM[quality].open() as file:
-        while True:
-            yield file.read(1024*1024)
+    try:
+        with STREAM[quality].open() as file:
+            while True:
+                yield file.read(1024*1024)
+    except KeyError as e:
+        print(f"{CONFIG.get('STREAMER')} is not live")
+        raise e
 
 
 # Property access, these can be changed at runtime
@@ -91,14 +91,23 @@ def s_binding():
 
 
 if __name__ == "__main__":
-    CONFIG = Config()
-    KEYS = get_access_token()
+    load_dotenv()
+    CONFIG = {
+        "CLIENT_SECRET": f"{os.getenv('CLIENT_SECRET')}",
+        "CLIENT_ID": f"{os.getenv('CLIENT_ID')}",
+        "STREAMER": f"{os.getenv('STREAMER')}"
+    }
+
+    KEYS = get_access_token(
+        CONFIG.get('CLIENT_ID'),
+        CONFIG.get('CLIENT_SECRET')
+    )
 
     SESSION = Streamlink()
     SESSION.set_option("twitch-api-header", f"OAuth {KEYS['access_token']}")
     SESSION.set_option("stream-timeout", 30)
     SESSION.set_option("player", "mpv")
-    STREAM = SESSION.streams(f"https://www.twitch.tv/{CONFIG.STREAMER}")
+    STREAM = SESSION.streams(f"https://www.twitch.tv/{CONFIG.get('STREAMER')}")
 
     PLAYER.fullscreen = False
     PLAYER.loop_playlist = "inf"
