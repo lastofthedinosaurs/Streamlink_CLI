@@ -2,7 +2,7 @@
 
 Gets the broadcaster’s streaming schedule. You can get the entire schedule or specific segments of the schedule. [Learn More](https://help.twitch.tv/s/article/channel-page-setup#Schedule).
 
-[https://dev.twitch.tv/docs/api/reference/#get-games](https://dev.twitch.tv/docs/api/reference/#get-games)
+[https://dev.twitch.tv/docs/api/reference/#get-channel-stream-schedule](https://dev.twitch.tv/docs/api/reference/#get-channel-stream-schedule)
 
 ## Authorization
 

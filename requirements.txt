@@ -1,4 +1,4 @@
-certifi==2022.12.7
+certifi==2023.5.7
 charset-normalizer==3.1.0
 idna==3.4
 iniconfig==2.0.0
@@ -12,8 +12,8 @@ pycryptodome==3.17
 PySocks==1.7.1
 pytest==7.3.1
 python-dotenv==1.0.0
-requests==2.29.0
+requests==2.30.0
 six==1.16.0
-streamlink==5.4.0
-urllib3==2.0.1
+streamlink==5.5.1
+urllib3==2.0.2
 websocket-client==1.5.1

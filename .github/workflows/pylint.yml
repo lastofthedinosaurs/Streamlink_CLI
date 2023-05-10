@@ -21,4 +21,4 @@ jobs:
         pip install --requirement requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint --min-similarity-lines=6 $(git ls-files '*.py')

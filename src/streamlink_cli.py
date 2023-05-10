@@ -11,7 +11,7 @@ import mpv
 from dotenv import load_dotenv
 from streamlink import Streamlink
 
-from twitch import get_access_token
+from twitch import get_access_token, APIhelper, print_now_playing
 
 load_dotenv()
 
@@ -27,10 +27,6 @@ PLAYER = mpv.MPV(
     input_default_bindings=True,
     input_vo_keyboard=True
 )
-
-
-class Config:
-    STREAMER = os.getenv("STREAMER")
 
 
 def skip_silence():
@@ -59,9 +55,13 @@ def skip_silence():
 @PLAYER.python_stream("streamlink-cli")
 def reader(quality="best"):
     """ Open stream URL as a file """
-    with STREAM[quality].open() as file:
-        while True:
-            yield file.read(1024*1024)
+    try:
+        with STREAM[quality].open() as file:
+            while True:
+                yield file.read(1024*1024)
+    except KeyError as error:
+        print(f"{CONFIG.get('STREAMER')} is not live")
+        raise error
 
 
 # Property access, these can be changed at runtime
@@ -91,14 +91,28 @@ def s_binding():
 
 
 if __name__ == "__main__":
-    CONFIG = Config()
-    KEYS = get_access_token()
+    load_dotenv()
+    CONFIG = {
+        "CLIENT_SECRET": f"{os.getenv('CLIENT_SECRET')}",
+        "CLIENT_ID": f"{os.getenv('CLIENT_ID')}",
+        "STREAMER": f"{os.getenv('STREAMER')}"
+    }
+
+    KEYS = get_access_token(
+        CONFIG.get('CLIENT_ID'),
+        CONFIG.get('CLIENT_SECRET')
+    )
+
+    API_HELPER = APIhelper()
+    API_HELPER.user_login = CONFIG.get('STREAMER')
+
+    print_now_playing(API_HELPER.get_streams(KEYS))
 
     SESSION = Streamlink()
     SESSION.set_option("twitch-api-header", f"OAuth {KEYS['access_token']}")
     SESSION.set_option("stream-timeout", 30)
     SESSION.set_option("player", "mpv")
-    STREAM = SESSION.streams(f"https://www.twitch.tv/{CONFIG.STREAMER}")
+    STREAM = SESSION.streams(f"https://www.twitch.tv/{CONFIG.get('STREAMER')}")
 
     PLAYER.fullscreen = False
     PLAYER.loop_playlist = "inf"
