@@ -11,8 +11,6 @@ videos from Twitch and YouTube in a terminal.
 ``` bash
 git clone https://github.com/lastofthedinosaurs/streamlink-cli.git
 cd streamlink-cli
-git checkout -b dev
-git pull origin dev
 ```
 
 ### Create and activate a new virtual environment:
