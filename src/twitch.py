@@ -227,13 +227,3 @@ if __name__ == "__main__":
         "CLIENT_ID": f"{os.getenv('CLIENT_ID')}",
         "STREAMER": f"{os.getenv('STREAMER')}"
     }
-
-    KEYS = get_access_token(
-        CONFIG.get('CLIENT_ID'),
-        CONFIG.get('CLIENT_SECRET')
-    )
-
-    API_HELPER = APIhelper()
-    API_HELPER.user_login = CONFIG.get('STREAMER')
-
-    print_now_playing(API_HELPER.get_streams(KEYS))

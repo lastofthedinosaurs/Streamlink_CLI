@@ -11,7 +11,7 @@ import mpv
 from dotenv import load_dotenv
 from streamlink import Streamlink
 
-from twitch import get_access_token
+from twitch import get_access_token, APIhelper, print_now_playing
 
 load_dotenv()
 
@@ -59,9 +59,9 @@ def reader(quality="best"):
         with STREAM[quality].open() as file:
             while True:
                 yield file.read(1024*1024)
-    except KeyError as e:
+    except KeyError as error:
         print(f"{CONFIG.get('STREAMER')} is not live")
-        raise e
+        raise error
 
 
 # Property access, these can be changed at runtime
@@ -102,6 +102,11 @@ if __name__ == "__main__":
         CONFIG.get('CLIENT_ID'),
         CONFIG.get('CLIENT_SECRET')
     )
+
+    API_HELPER = APIhelper()
+    API_HELPER.user_login = CONFIG.get('STREAMER')
+
+    print_now_playing(API_HELPER.get_streams(KEYS))
 
     SESSION = Streamlink()
     SESSION.set_option("twitch-api-header", f"OAuth {KEYS['access_token']}")
