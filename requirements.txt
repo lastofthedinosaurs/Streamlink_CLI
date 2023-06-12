@@ -10,7 +10,7 @@ pluggy==1.0.0
 pycountry==22.3.5
 pycryptodome==3.17
 PySocks==1.7.1
-pytest==7.3.1
+pytest==7.3.2
 python-dotenv==1.0.0
 requests==2.30.0
 six==1.16.0
