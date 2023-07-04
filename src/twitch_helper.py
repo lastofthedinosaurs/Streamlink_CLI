@@ -72,14 +72,15 @@ class TwitchAPISession:
 
         Args:
             user_id (str): The Twitch user ID of the user.
-            direction (str, optional): The direction of the follow relationship. Valid values are "to" (users
-                                       followed by the specified user) and "from" (users following the specified
-                                       user). Default is "to".
-            first (int, optional): The maximum number of results to return. Default is 20.
-            after (str, optional): The cursor for pagination. Default is None.
+            direction (str, optional): The direction of the follow relationship.
+                Values: "to" (users followed by the specified user) and
+                        "from" (users following the user).
+                Default: "to".
+            first (int, optional): Max number of results to return. Default: 20.
+            after (str, optional): Pagination cursor. Default: None.
 
         Returns:
-            dict: The JSON response containing the list of followed users.
+            dict: JSON response with the list of followed users.
         """
         url = BASE_URL + "users/follows"
         params = {"from_id": user_id, "first": first, "after": after, "direction": direction}
