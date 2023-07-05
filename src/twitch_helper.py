@@ -30,11 +30,43 @@ class TwitchAPISession:
         """
         self.client_id = client_id
         self.access_token = access_token
+        # Include oauth_token in the constructor to avoid pylint E1101 error.
+        # pylint: disable=E0602
+        self.oauth_token = oauth_token
         self.session = requests.Session()
         self.session.headers.update({
             "Client-ID": self.client_id,
             "Authorization": f"Bearer {self.access_token}"
         })
+
+    def create_clip(self, video_id):
+        """
+        Create a clip from a specified video on Twitch.
+
+        Args:
+            video_id (str): ID of the video from which the clip will be created.
+
+        Returns:
+            dict: Clip information, including its ID and URL.
+            
+        Raises:
+            RuntimeError: If the API response indicates an error.
+        """
+        url = f"{BASE_URL}/clips"
+        payload = {
+            "broadcaster_id": video_id,
+        }
+
+        response = self.session.post(url, json=payload)
+
+        if response.status_code == 401:
+            raise RuntimeError("Invalid OAuth token")
+
+        data = response.json()
+        if "error" in data:
+            raise RuntimeError(f"Clip creation failed: {data['error']}")
+
+        return data["data"]["id"], data["data"]["url"]
 
     def get_users(self, logins):
         """
@@ -205,19 +237,45 @@ class TwitchAPISession:
         response = self.session.get(url, params=params)
         return response.json()
 
-    def block_user(self, target_user_id):
+    def block_user(self, user_login):
         """
-        Block a specific user.
+        Block a user on Twitch.
 
         Args:
-            target_user_id (str): The Twitch user ID of the user to block.
+            user_login (str): The login name of the user to be blocked.
 
         Returns:
-            dict: The JSON response indicating the success of the block action.
+            dict: A dictionary containing information about the blocked user.
+
+        Raises:
+            ValueError: If no authentication token is provided during initialization.
+            RuntimeError: If the API responds with a 401 Unauthorized error or any other error
+                        in blocking the user. The error message will be included in the exception.
         """
-        url = BASE_URL + "users/blocks"
-        data = {"target_user_id": target_user_id}
-        response = self.session.post(url, json=data)
+        # Check if the required authentication token is present
+        if not self.access_token and not self.oauth_token:
+            raise ValueError("Authentication token missing. Provide access token or OAuth token.")
+
+        headers = {
+            "Client-ID": self.client_id,
+            "Authorization": f"Bearer {self.oauth_token or self.access_token}",
+        }
+
+
+        # Set a reasonable timeout for the API request (e.g., 10 seconds)
+        timeout = 10
+
+        # Make a request to the Twitch API to block the specified user
+        base_url = "https://api.twitch.tv/helix/users/blocks?target_user_login="
+        url = f"{base_url}{user_login}"
+        response = requests.put(url, headers=headers, timeout=timeout)
+
+        if response.status_code == 401:
+            raise RuntimeError("Unauthorized: Invalid OAuth token.")
+        if response.status_code != 200:
+            error_message = response.json().get('message', 'Unknown error')
+            raise RuntimeError(f"Error blocking user: {error_message}")
+
         return response.json()
 
     def unblock_user(self, target_user_id):

@@ -1,0 +1,21 @@
+{
+  "data": [
+    {
+      "from_id": "user1_id",
+      "from_name": "user1_name",
+      "to_id": "user2_id",
+      "to_name": "user2_name",
+      "followed_at": "2023-07-01T12:00:00Z"
+    },
+    {
+      "from_id": "user3_id",
+      "from_name": "user3_name",
+      "to_id": "user1_id",
+      "to_name": "user1_name",
+      "followed_at": "2023-07-02T15:30:00Z"
+    }
+  ],
+  "pagination": {
+    // Pagination data can be added if needed in the tests
+  }
+}

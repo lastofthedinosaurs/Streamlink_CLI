@@ -1,0 +1,22 @@
+{
+  "data": [
+    {
+      "user_id": "user1_id",
+      "user_login": "user1_login",
+      "user_name": "User One"
+    },
+    {
+      "user_id": "user2_id",
+      "user_login": "user2_login",
+      "user_name": "User Two"
+    },
+    {
+      "user_id": "user3_id",
+      "user_login": "user3_login",
+      "user_name": "User Three"
+    }
+  ],
+  "pagination": {
+    "cursor": "eyJiIjpudWxsLCJhIjp7Ik9mZnNldCI6MjcwMzQ1fQ=="
+  }
+}

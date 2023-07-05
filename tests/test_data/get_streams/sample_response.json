@@ -1,0 +1,43 @@
+{
+  "data": [
+    {
+      "id": "12345",
+      "user_id": "user1_id",
+      "user_login": "user1",
+      "user_name": "UserOne",
+      "game_id": "game1_id",
+      "game_name": "Game One",
+      "type": "",
+      "title": "Playing Game One",
+      "viewer_count": 2000,
+      "started_at": "2023-07-04T12:00:00Z",
+      "language": "en",
+      "thumbnail_url": "https://example.com/stream1_thumbnail.jpg",
+      "tag_ids": ["tag1_id", "tag2_id"],
+      "is_mature": false,
+      "thumbnail_width": 1920,
+      "thumbnail_height": 1080
+    },
+    {
+      "id": "67890",
+      "user_id": "user2_id",
+      "user_login": "user2",
+      "user_name": "UserTwo",
+      "game_id": "game2_id",
+      "game_name": "Game Two",
+      "type": "",
+      "title": "Streaming Game Two",
+      "viewer_count": 1000,
+      "started_at": "2023-07-04T10:30:00Z",
+      "language": "fr",
+      "thumbnail_url": "https://example.com/stream2_thumbnail.jpg",
+      "tag_ids": ["tag3_id"],
+      "is_mature": true,
+      "thumbnail_width": 1280,
+      "thumbnail_height": 720
+    }
+  ],
+  "pagination": {
+    "cursor": "eyJiIjpudWxsLCJhIjp7Ik9mZnNldCI6MjB9fQ=="
+  }
+}

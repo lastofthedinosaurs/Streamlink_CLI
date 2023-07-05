@@ -1,0 +1,26 @@
+{
+  "total": 2,
+  "data": [
+    {
+      "from_id": "user1_id",
+      "from_login": "user1_login",
+      "from_name": "User One",
+      "to_id": "user2_id",
+      "to_login": "user2_login",
+      "to_name": "User Two",
+      "followed_at": "2023-07-01T12:34:56Z"
+    },
+    {
+      "from_id": "user3_id",
+      "from_login": "user3_login",
+      "from_name": "User Three",
+      "to_id": "user2_id",
+      "to_login": "user2_login",
+      "to_name": "User Two",
+      "followed_at": "2023-07-01T10:00:00Z"
+    }
+  ],
+  "pagination": {
+    "cursor": "eyJiIjpudWxsLCJhIjp7Ik9mZnNldCI6MjcwMzQ1fQ=="
+  }
+}

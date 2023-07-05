@@ -1,0 +1,38 @@
+{
+  "data": [
+    {
+      "id": "stream_id1",
+      "user_id": "user1_id",
+      "user_login": "user1_login",
+      "user_name": "user1_name",
+      "game_id": "game1_id",
+      "game_name": "game1_name",
+      "type": "live",
+      "title": "Stream Title 1",
+      "viewer_count": 1000,
+      "started_at": "2023-07-01T12:00:00Z",
+      "language": "en",
+      "thumbnail_url": "thumbnail_url1",
+      "tag_ids": ["tag1_id", "tag2_id"]
+    },
+    {
+      "id": "stream_id2",
+      "user_id": "user2_id",
+      "user_login": "user2_login",
+      "user_name": "user2_name",
+      "game_id": "game1_id",
+      "game_name": "game1_name",
+      "type": "live",
+      "title": "Stream Title 2",
+      "viewer_count": 1500,
+      "started_at": "2023-07-01T15:30:00Z",
+      "language": "es",
+      "thumbnail_url": "thumbnail_url2",
+      "tag_ids": ["tag3_id", "tag4_id"]
+    }
+  ],
+  "pagination": {
+    // Pagination data can be added if needed in the tests
+  }
+}
+

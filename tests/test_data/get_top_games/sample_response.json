@@ -1,0 +1,17 @@
+{
+  "data": [
+    {
+      "id": "game1_id",
+      "name": "Game One",
+      "box_art_url": "https://example.com/game1_box_art.jpg"
+    },
+    {
+      "id": "game2_id",
+      "name": "Game Two",
+      "box_art_url": "https://example.com/game2_box_art.jpg"
+    }
+  ],
+  "pagination": {
+    "cursor": "eyJiIjpudWxsLCJhIjp7Ik9mZnNldCI6MjB9fQ=="
+  }
+}

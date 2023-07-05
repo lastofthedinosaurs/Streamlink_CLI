@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "id": "12345",
+      "login": "user1",
+      "display_name": "User One",
+      "type": "",
+      "broadcaster_type": "",
+      "description": "I'm User One!",
+      "profile_image_url": "https://example.com/user1_profile_image.png",
+      "offline_image_url": "",
+      "view_count": 1000,
+      "email": "user1@example.com"
+    },
+    {
+      "id": "67890",
+      "login": "user2",
+      "display_name": "User Two",
+      "type": "",
+      "broadcaster_type": "",
+      "description": "I'm User Two!",
+      "profile_image_url": "https://example.com/user2_profile_image.png",
+      "offline_image_url": "",
+      "view_count": 500,
+      "email": "user2@example.com"
+    }
+  ]
+}
