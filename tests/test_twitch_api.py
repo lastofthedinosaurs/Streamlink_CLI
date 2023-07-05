@@ -29,6 +29,7 @@ import unittest
 
 from unittest.mock import Mock
 import requests
+# pylint: disable=E0401
 from src.twitch_helper import TwitchAPISession
 
 # pylint: disable=R0904
